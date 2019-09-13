@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import { connect } from 'react-redux'
+import { Switch, Route, } from 'react-router-dom';
 
 
 class App extends React.Component {
