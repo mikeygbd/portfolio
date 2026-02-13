@@ -6,7 +6,7 @@ export default function Home() {
         <div className="max-w-6xl mx-auto px-6 py-24">
           <div className="max-w-3xl">
             <h1 className="text-6xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
-              Michael Stauffer
+              Michael Soares
             </h1>
             <p className="text-3xl text-slate-300 mb-8">
               React Native & Python Developer
