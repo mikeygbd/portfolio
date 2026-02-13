@@ -1,8 +1,76 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
+import Image from "next/image";
 
+// Phone Mockup Component with Auto-Scroll
+function PhoneMockup({
+  images,
+  glowColor,
+}: {
+  images: string[];
+  glowColor: string;
+}) {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % images.length);
+    }, 3000); // Change image every 3 seconds
+
+    return () => clearInterval(interval);
+  }, [images.length]);
+
+  return (
+    <div className="relative mx-auto w-[300px] h-[600px]">
+      {/* Phone Frame */}
+      <div className="absolute inset-0 bg-slate-900 rounded-[3rem] shadow-2xl border-8 border-slate-800 overflow-hidden">
+        {/* Notch */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-40 h-7 bg-slate-900 rounded-b-3xl z-10" />
+
+        {/* Screen with sliding screenshots */}
+        <div className="absolute inset-2 rounded-[2.5rem] overflow-hidden bg-black">
+          <AnimatePresence initial={false}>
+            <motion.div
+              key={currentIndex}
+              initial={{ x: 300 }}
+              animate={{ x: 0 }}
+              exit={{ x: -300 }}
+              transition={{ duration: 0.4, ease: "easeInOut" }}
+              className="absolute inset-0"
+            >
+              <Image
+                src={images[currentIndex]}
+                alt={`Screenshot ${currentIndex + 1}`}
+                fill
+                className="object-cover"
+                priority
+              />
+            </motion.div>
+          </AnimatePresence>
+
+          {/* Dots indicator */}
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+            {images.map((_, index) => (
+              <div
+                key={index}
+                className={`w-2 h-2 rounded-full transition-all ${
+                  index === currentIndex ? "bg-white w-6" : "bg-white/30"
+                }`}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Glow effect */}
+      <div
+        className={`absolute inset-0 bg-gradient-to-r ${glowColor} rounded-[3rem] blur-3xl opacity-20 -z-10`}
+      />
+    </div>
+  );
+}
 export default function Home() {
   const [scrollY, setScrollY] = useState(0);
 
@@ -217,22 +285,17 @@ export default function Home() {
                     Tech Stack
                   </h4>
                   <div className="flex flex-wrap gap-2">
-                    {[
-                      "React Native",
-                      "Python",
-                      "FastAPI",
-                      "PostgreSQL",
-                      "Stripe",
-                      "Railway",
-                    ].map((tech) => (
-                      <motion.span
-                        key={tech}
-                        whileHover={{ scale: 1.1, y: -2 }}
-                        className="px-4 py-2 bg-slate-800/80 border border-slate-700 rounded-lg text-sm font-mono hover:border-green-500 transition-colors"
-                      >
-                        {tech}
-                      </motion.span>
-                    ))}
+                    {["React Native", "Firebase", "SmartCar", "Stripe"].map(
+                      (tech) => (
+                        <motion.span
+                          key={tech}
+                          whileHover={{ scale: 1.1, y: -2 }}
+                          className="px-4 py-2 bg-slate-800/80 border border-slate-700 rounded-lg text-sm font-mono hover:border-green-500 transition-colors"
+                        >
+                          {tech}
+                        </motion.span>
+                      ),
+                    )}
                   </div>
                 </div>
 
@@ -276,7 +339,7 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Phone Mockup */}
+            {/* Phone Mockup with Auto-Scroll */}
             <motion.div
               initial={{ opacity: 0, x: 50 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -284,29 +347,14 @@ export default function Home() {
               viewport={{ once: true }}
               className="relative"
             >
-              <div className="relative mx-auto w-[300px] h-[600px]">
-                {/* Phone Frame */}
-                <div className="absolute inset-0 bg-slate-900 rounded-[3rem] shadow-2xl border-8 border-slate-800">
-                  {/* Notch */}
-                  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-40 h-7 bg-slate-900 rounded-b-3xl" />
-
-                  {/* Screen */}
-                  <div className="absolute inset-2 bg-gradient-to-br from-green-600/20 to-emerald-600/20 rounded-[2.5rem] overflow-hidden flex items-center justify-center">
-                    <div className="text-center">
-                      <div className="text-8xl mb-4">⚡</div>
-                      <div className="text-2xl font-bold text-white mb-2">
-                        ParkWatt
-                      </div>
-                      <div className="text-slate-400 text-sm px-8">
-                        Screenshot placeholder
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Glow effect */}
-                <div className="absolute inset-0 bg-gradient-to-r from-green-500 to-emerald-500 rounded-[3rem] blur-3xl opacity-20 -z-10" />
-              </div>
+              <PhoneMockup
+                images={[
+                  "/images/parkwatt-1.png",
+                  "/images/parkwatt-2.png",
+                  "/images/parkwatt-3.png",
+                ]}
+                glowColor="from-green-500 to-emerald-500"
+              />
             </motion.div>
           </div>
         </motion.div>
@@ -328,23 +376,14 @@ export default function Home() {
               viewport={{ once: true }}
               className="relative order-2 lg:order-1"
             >
-              <div className="relative mx-auto w-[300px] h-[600px]">
-                <div className="absolute inset-0 bg-slate-900 rounded-[3rem] shadow-2xl border-8 border-slate-800">
-                  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-40 h-7 bg-slate-900 rounded-b-3xl" />
-                  <div className="absolute inset-2 bg-gradient-to-br from-teal-600/20 to-green-600/20 rounded-[2.5rem] overflow-hidden flex items-center justify-center">
-                    <div className="text-center">
-                      <div className="text-8xl mb-4">🏔️</div>
-                      <div className="text-2xl font-bold text-white mb-2">
-                        Outerly
-                      </div>
-                      <div className="text-slate-400 text-sm px-8">
-                        Screenshot placeholder
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="absolute inset-0 bg-gradient-to-r from-teal-500 to-green-500 rounded-[3rem] blur-3xl opacity-20 -z-10" />
-              </div>
+              <PhoneMockup
+                images={[
+                  "/images/outerly-1.png",
+                  "/images/outerly-2.png",
+                  "/images/outerly-3.png",
+                ]}
+                glowColor="from-teal-500 to-green-500"
+              />
             </motion.div>
 
             <div className="order-1 lg:order-2">
@@ -503,7 +542,7 @@ export default function Home() {
             <motion.a
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              href="mailto:michael@outerly.com"
+              href="mailto:YOUR_EMAIL@example.com"
               className="inline-block px-12 py-5 bg-white text-green-600 hover:bg-slate-100 rounded-xl font-bold text-xl transition-all shadow-2xl"
             >
               Get In Touch →
